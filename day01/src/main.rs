@@ -15,50 +15,56 @@ fn main() {
         }
     };
     println!("Advent of Code | Day 01");
-
-
-    let mut left_column: Vec<usize> = Vec::new();
-    let mut right_column: Vec<usize> = Vec::new();
-    for line in file.lines() {
-        if line.is_empty() { continue }
-        let nums: Vec<&str> = line.split_whitespace().collect();
-        let left = nums[0].parse::<usize>().unwrap();
-        let right = nums[1].parse::<usize>().unwrap();
-        left_column.push(left);
-        right_column.push(right);
-    }
+    
+    let timer = std::time::Instant::now();
+    let (left_column, right_column) = parse(file);
+    let parse_time = timer.elapsed();
     
     let timer = std::time::Instant::now();
     let part1 = part1(&left_column, &right_column);
     let part1_time = timer.elapsed();
-    println!("Part 1: {part1} in {}ns", part1_time.as_nanos());
+    
     let timer = std::time::Instant::now();
     let part2 = part2(&left_column, &right_column);
     let part2_time = timer.elapsed();
-    println!("Part 2: {part2} in {}µs", part2_time.as_micros());
+    
     let total_time = total_timer.elapsed();
+    println!("Parsed input in {}µs", parse_time.as_micros());
+    println!("Part 1: {part1} in {}µs", part1_time.as_micros());
+    println!("Part 2: {part2} in {}µs", part2_time.as_micros());
     println!("Total runtime: {}µs", total_time.as_micros())
 }
 
-fn part1(left_column: &[usize], right_column: &[usize]) -> usize {
-    let l_col = left_column;
-    let r_col = right_column;
-    debug_assert!(left_column.is_sorted());
-    debug_assert!(right_column.is_sorted());
+fn parse(input: String) -> (Vec<isize>, Vec<isize>) {
+    let mut left_column: Vec<isize> = Vec::new();
+    let mut right_column: Vec<isize> = Vec::new();
+    for line in input.lines() {
+        if line.is_empty() { continue }
+        let nums: Vec<&str> = line.split_whitespace().collect();
+        let left = nums[0].parse::<isize>().unwrap();
+        let right = nums[1].parse::<isize>().unwrap();
+        left_column.push(left);
+        right_column.push(right);
+    }
+    (left_column, right_column)
+}
+
+fn part1(left_column: &Vec<isize>, right_column: &Vec<isize>) -> usize {
+    let mut l_col = left_column.clone();
+    let mut r_col = right_column.clone();
+    l_col.sort();
+    r_col.sort();
+    debug_assert!(l_col.is_sorted());
+    debug_assert!(r_col.is_sorted());
     
     let mut sum = 0;
     for i in 0..l_col.len() {
-        if l_col[i] > r_col[i] {
-            sum += l_col[i] - r_col[i];
-        } else {
-            sum += r_col[i] - l_col[i];
-        }
+        sum += l_col[i].abs_diff(r_col[i]);
     }
     sum
 }
 
-fn part2(left_column: &[usize], right_column: &[usize]) -> usize {
-    
+fn part2(left_column: &[isize], right_column: &[isize]) -> isize {    
     let mut similarity = 0;
     for left in left_column {
         let mut count = 0;
