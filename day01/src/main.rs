@@ -1,23 +1,12 @@
+use shared::PrettyPrint;
+
 fn main() {
     let total_timer = std::time::Instant::now();
-    let path = match std::env::args().nth(1) {
-        Some(s) => s,
-        None => { 
-            println!("Missing required argument: <input path>");
-            std::process::exit(1)
-        }
-    };
-    let file = match std::fs::read_to_string(path) {
-        Ok(f) => f,
-        Err(e) => {
-            println!("Error reading file: {e}");
-            std::process::exit(1)
-        }
-    };
+    let input = shared::get_input();
     println!("Advent of Code | Day 01");
     
     let timer = std::time::Instant::now();
-    let (left_column, right_column) = parse(file);
+    let (left_column, right_column) = parse(input);
     let parse_time = timer.elapsed();
     
     let timer = std::time::Instant::now();
@@ -29,10 +18,10 @@ fn main() {
     let part2_time = timer.elapsed();
     
     let total_time = total_timer.elapsed();
-    println!("Parsed input in {}µs", parse_time.as_micros());
-    println!("Part 1: {part1} in {}µs", part1_time.as_micros());
-    println!("Part 2: {part2} in {}µs", part2_time.as_micros());
-    println!("Total runtime: {}µs", total_time.as_micros())
+    println!("Parsed input in {}", parse_time.fmt_pretty());
+    println!("Part 1: {part1} in {}", part1_time.fmt_pretty());
+    println!("Part 2: {part2} in {}", part2_time.fmt_pretty());
+    println!("Total runtime: {}", total_time.fmt_pretty());
 }
 
 fn parse(input: String) -> (Vec<isize>, Vec<isize>) {

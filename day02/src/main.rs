@@ -1,32 +1,21 @@
+use shared::{PrettyPrint};
+
 fn main() {
     let total_timer = std::time::Instant::now();
-    let path = match std::env::args().nth(1) {
-        Some(s) => s,
-        None => {
-            println!("Missing required argument: <input path>");
-            std::process::exit(1)
-        }
-    };
-    let file = match std::fs::read_to_string(path) {
-        Ok(f) => f,
-        Err(e) => {
-            println!("Error reading file: {e}");
-            std::process::exit(1)
-        }
-    };
+    let input = shared::get_input();
     
     println!("Advent of Code | Day 02");
     
     let timer = std::time::Instant::now();
-    let (part1, reports) = part1(&file);
+    let (part1, reports) = part1(&input);
     let part1_time = timer.elapsed();
     let timer = std::time::Instant::now();
     let part2 = part2(reports);
     let part2_time = timer.elapsed();
     let total_time = total_timer.elapsed();
-    println!("Part 1: {} in {}µs", part1, part1_time.as_micros());
-    println!("Part 2: {} in {}µs", part2, part2_time.as_micros());
-    println!("Total runtime: {}µs", total_time.as_micros())
+    println!("Part 1: {} in {}", part1, part1_time.fmt_pretty());
+    println!("Part 2: {} in {}", part2, part2_time.fmt_pretty());
+    println!("Total runtime: {}", total_time.fmt_pretty())
 }
 
 fn part1(input: &String) -> (usize, Vec<Vec<isize>>) {
@@ -77,10 +66,10 @@ fn part2(reports: Vec<Vec<isize>>) -> usize {
     safe_reports
 }
 
-fn test_report(report: &Vec<isize>) -> bool {
+fn test_report(report: &[isize]) -> bool {
     let mut lastlevel = report[0];
     let increasing = report[0] - report.last().unwrap() < 0;
-    for (i, level) in report[1..].iter().enumerate() {
+    for level in &report[1..] {
         let change = if increasing { level - lastlevel } else { lastlevel - level };
         if !(1..=3).contains(&change) {
             return false;
