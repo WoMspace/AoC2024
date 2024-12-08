@@ -3,7 +3,7 @@ use crate::Direction::*;
 
 fn main() {
     let input = shared::get_input();
-    println!("Advent of Code | Day 03");
+    println!("Advent of Code | Day 06");
 
     let timer = std::time::Instant::now();
     let part1 = part1(&input);
