@@ -2,7 +2,7 @@ use shared::PrettyPrint;
 
 fn main() {
     let input = shared::get_input();
-    println!("Advent of Code | Day 08");
+    println!("Advent of Code | Day 09");
 
     let timer = std::time::Instant::now();
     let part1 = part1(&input);
